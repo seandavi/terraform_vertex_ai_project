@@ -30,35 +30,6 @@ resource "google_folder" "department1" {
 */
 
 
-# create a notebook instance
-resource "google_project_service" "notebooks" {
-  provider           = google
-  project            = google_project.notebook-project.project_id
-  service            = "notebooks.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_notebooks_instance" "basic_instance" {
-  project      = google_project.notebook-project.project_id
-  name         = "notebooks-instance-basic"
-  provider     = google
-  # requires a zone, not a region 
-  location     = "us-central1-a" 
-  machine_type = "e2-small"
-
-  # The project here is the project where the image is stored,
-  # not the project where the instance is created
-  vm_image {
-    project      = "deeplearning-platform-release"
-    image_family = "tf-ent-2-9-cu113-notebooks"
-  }
-
-  depends_on = [
-    google_project_service.notebooks
-  ]
-}
-
-
 
 resource "google_project_service" "google-cloud-apis" {
   project = google_project.notebook-project.project_id 
