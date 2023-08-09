@@ -6,9 +6,9 @@ resource "random_string" "random_id" {
   special          = false
 }
 
-resource "google_project" "notebook-project" {
-  name       = "notebook-project-${random_string.random_id.result}"
-  project_id = "notebook-project-${random_string.random_id.result}"
+resource "google_project" "vertex_ai-project" {
+  name       = "vertex_ai-project-${random_string.random_id.result}"
+  project_id = "vertex_ai-project-${random_string.random_id.result}"
   billing_account = "${var.billing_id}"
   # uncomment the following line to assign to an organization
   # org_id     = "1234567" 
@@ -32,12 +32,12 @@ resource "google_folder" "department1" {
 
 
 resource "google_project_service" "google-cloud-apis" {
-  project = google_project.notebook-project.project_id 
+  project = google_project.vertex_ai-project.project_id 
   for_each = toset([
     "aiplatform.googleapis.com",
     "servicenetworking.googleapis.com",
     "compute.googleapis.com",
-    "notebooks.googleapis.com"
+    "vertex_ais.googleapis.com"
   ])
   disable_dependent_services = true
   disable_on_destroy         = true
@@ -47,7 +47,7 @@ resource "google_project_service" "google-cloud-apis" {
 
 
 resource "google_project_iam_member" "vertexai_user" {
-  project = google_project.notebook-project.project_id 
+  project = google_project.vertex_ai-project.project_id 
   for_each = toset([
     "roles/aiplatform.user",
     "roles/aiplatform.admin",
